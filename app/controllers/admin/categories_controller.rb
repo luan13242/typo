@@ -9,6 +9,8 @@ class Admin::CategoriesController < Admin::BaseController
   #def edit; new_or_edit;  end
   def edit
     #new_or_edit
+    
+    @category = Category.new
 
     if @category.save
       flash[:notice] = "Category was successfully saved."
