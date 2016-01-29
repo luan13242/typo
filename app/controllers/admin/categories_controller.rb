@@ -3,13 +3,11 @@ class Admin::CategoriesController < Admin::BaseController
 
   #def index; redirect_to :action => 'new' ; end
   def index
-    #redirect_to :action => 'new'
-    "HELLO WORLD!"
   end
   
   #def edit; new_or_edit;  end
   def edit
-    new_or_edit
+    #new_or_edit
   end
 
   def new 
