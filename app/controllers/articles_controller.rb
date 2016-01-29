@@ -28,7 +28,7 @@ class ArticlesController < ContentController
     end
 
     #@page_title = index_title
-    @page_title = "nasty stuff!!!!!"
+    @page_title = "controllers/articles_controller"
     @description = index_description
     @keywords = (this_blog.meta_keywords.empty?) ? "" : this_blog.meta_keywords
 
