@@ -3,7 +3,7 @@ class Admin::CategoriesController < Admin::BaseController
 
   #def index; redirect_to :action => 'new' ; end
   def index
-    #redirect_to :action => 'new'
+    redirect_to :action => 'new'
   end
   
   #def edit; new_or_edit;  end
@@ -13,16 +13,16 @@ class Admin::CategoriesController < Admin::BaseController
 
   def new 
     #redirect_to :action => 'index'
-    @category = Category.new
-    @categories = Category.find(:all)
-=begin
+    #@category = Category.new
+    #@categories = Category.find(:all)
+
     respond_to do |format|
       format.html { new_or_edit }
       format.js { 
         @category = Category.new
       }
     end
-=end
+
   end
 
   def destroy
@@ -37,7 +37,7 @@ class Admin::CategoriesController < Admin::BaseController
   def new_or_edit
     @categories = Category.find(:all)
     @category = Category.find(params[:id])
-    @category.attributes = params[:category]
+    #@category.attributes = params[:category]
     
 =begin    
     if request.post?
@@ -54,7 +54,7 @@ class Admin::CategoriesController < Admin::BaseController
     end
 =end
 
-    render 'new'
+    #render 'new'
   end
 
   def save_category
