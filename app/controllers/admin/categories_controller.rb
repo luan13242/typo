@@ -3,7 +3,7 @@ class Admin::CategoriesController < Admin::BaseController
 
   #def index; redirect_to :action => 'new' ; end
   def index
-    redirect_to :action => 'new'
+    #redirect_to :action => 'new'
   end
   
   #def edit; new_or_edit;  end
@@ -12,12 +12,15 @@ class Admin::CategoriesController < Admin::BaseController
   end
 
   def new 
+    redirect_to :action => 'index'
+=begin    
     respond_to do |format|
       format.html { new_or_edit }
       format.js { 
         @category = Category.new
       }
     end
+=end    
   end
 
   def destroy
