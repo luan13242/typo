@@ -54,7 +54,7 @@ class Admin::CategoriesController < Admin::BaseController
     end
 =end
 
-    #render 'new'
+    render 'new'
   end
 
   def save_category
