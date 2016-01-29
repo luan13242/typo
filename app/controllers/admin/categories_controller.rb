@@ -11,14 +11,12 @@ class Admin::CategoriesController < Admin::BaseController
   end
 
   def new 
-=begin
     respond_to do |format|
       format.html { new_or_edit }
       format.js { 
         @category = Category.new
       }
     end
-=end
   end
 
   def destroy
