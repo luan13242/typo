@@ -10,7 +10,8 @@ class Admin::CategoriesController < Admin::BaseController
   def edit
     #new_or_edit
     
-    #@category = Category.new
+    @category = Category.new
+    @category.name = "cat"
 
     if @category.valid?
       if @category.save
