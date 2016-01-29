@@ -10,7 +10,7 @@ class Admin::CategoriesController < Admin::BaseController
   def edit
     #new_or_edit
 
-    if @category.save!
+    if @category.save
       flash[:notice] = "Category was successfully saved."
     else
       flash[:error] = "Category could not be saved."
