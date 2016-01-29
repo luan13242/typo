@@ -13,16 +13,18 @@ class Admin::CategoriesController < Admin::BaseController
 
   def new 
     #redirect_to :action => 'index'
-    #@category = Category.new
-    #@categories = Category.find(:all)
-
+    @category = Category.new
+    @categories = Category.find(:all)
+    @category.attributes = params[:category]
+    
+=begin
     respond_to do |format|
       format.html { new_or_edit }
       format.js { 
         @category = Category.new
       }
     end
-
+=end
   end
 
   def destroy
@@ -37,7 +39,7 @@ class Admin::CategoriesController < Admin::BaseController
   def new_or_edit
     @categories = Category.find(:all)
     @category = Category.find(params[:id])
-    #@category.attributes = params[:category]
+    @category.attributes = params[:category]
     
 =begin    
     if request.post?
