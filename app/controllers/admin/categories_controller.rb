@@ -9,14 +9,13 @@ class Admin::CategoriesController < Admin::BaseController
   #def edit; new_or_edit;  end
   def edit
     #new_or_edit
-    @category.save!
-=begin    
+
     if @category.save!
-      flash[:notice] = _('Category was successfully saved.')
+      flash[:notice] = "Category was successfully saved."
     else
-      flash[:error] = _('Category could not be saved.')
+      flash[:error] = "Category could not be saved."
     end
-=end    
+ 
     redirect_to :action => 'new'
   end
 
