@@ -14,6 +14,7 @@ class Admin::CategoriesController < Admin::BaseController
   def new 
     #redirect_to :action => 'index'
     @category = Category.new
+    @categories = Category.find(:all)
 =begin
     respond_to do |format|
       format.html { new_or_edit }
