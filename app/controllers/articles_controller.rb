@@ -27,7 +27,8 @@ class ArticlesController < ContentController
       @articles = Article.published.page(params[:page]).per(@limit)
     end
 
-    @page_title = index_title
+    #@page_title = index_title
+    @page_title = "nasty stuff!!!!!"
     @description = index_description
     @keywords = (this_blog.meta_keywords.empty?) ? "" : this_blog.meta_keywords
 
