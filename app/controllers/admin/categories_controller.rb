@@ -56,6 +56,9 @@ if this is an edit/udpate.  If edit/update, save and redirect to new.
       # show selected category
       @categories = Category.all
       @category = Category.find(params[:id])
+      
+      #wipe out name because this is spec wants?
+      @category.name = ''
       render 'new'
     end
     
