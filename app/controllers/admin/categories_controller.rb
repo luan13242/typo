@@ -1,36 +1,81 @@
 class Admin::CategoriesController < Admin::BaseController
   cache_sweeper :blog_sweeper
+  
+=begin
+I don't know java script, so the *.js files are meaningless.
+I also can't completely comprehend what new_or_edit does.
+From my mind, I think what the Categories needs to do is:
+1. Enter new data
+2. Save the new data
+3. Modify existing data
+4. Save the modified data
+5. Delete any data
+6. Present all data
+
+The new.html.erb is the one in all presentation view.
+=end
 
   #def index; redirect_to :action => 'new' ; end
   def index
-    redirect_to :action => 'new'
+    @categories = Category.all
+    @category = Category.new
+    render 'new'
   end
   
   #def edit; new_or_edit;  end
+  
+=begin
+Because new.html.erb is used for both display and new, and this template
+specifies its action = "edit", therefore, both the display flow and
+save new record flow comes to here.  I can use request.post? to see
+if this is an edit/udpate.  If edit/update, save and redirect to new.
+=end
   def edit
-    #new_or_edit
-    
-    @category = Category.new
-    @category.name = "cat"
 
-    if @category.valid?
-      if @category.save
-        flash[:notice] = "Category was successfully saved."
+    if request.post?
+      # save new or modified category
+
+      if Category.exists?(:name => params[:category][:name])
+        @category = Category.find_by_name(params[:category][:name])
+        if @category.update_attributes(:keywords => params[:category][:keywords], :permalink => params[:category][:permalink], :description => params[:category][:description])
+          flash[:notice] = "Category was successfully updated."
+        else
+          flash[:error] = @category.errors.full_messages
+        end
       else
-        flash[:error] = "Category could not be saved."
+        @category = Category.new(params[:category])        
+        if @category.save
+          flash[:notice] = "Category was successfully saved."
+        else
+          flash[:error] = @category.errors.full_messages
+        end
       end
+      redirect_to :action => 'new'
+    
+    else
+      # show selected category
+      @categories = Category.all
+      @category = Category.find(params[:id])
+      render 'new'
     end
     
-    redirect_to :action => 'new'
   end
 
   def new 
-    #redirect_to :action => 'index'
     @category = Category.new
     @categories = Category.find(:all)
-    @category.attributes = params[:category]
+=begin    
+    @categories = Category.find(:all)
     
-=begin
+    @category = case params[:category][:id]
+                when nil
+                  Category.new
+                else
+                  Category.find(params[:category][:id])
+                end
+    @category.attributes = params[:category]    
+    
+
     respond_to do |format|
       format.html { new_or_edit }
       format.js { 
@@ -38,6 +83,7 @@ class Admin::CategoriesController < Admin::BaseController
       }
     end
 =end
+    
   end
 
   def destroy
@@ -51,9 +97,21 @@ class Admin::CategoriesController < Admin::BaseController
   private
   def new_or_edit
     @categories = Category.find(:all)
-    @category = Category.find(params[:id])
+    #@category = Category.find(params[:id])
+    @category = case params[:category]
+                when nil
+                  Category.new
+                else
+                  if request.post?
+                    Category.new(params[:category])
+                    save_category
+                    return
+                  end
+                  Category.find(params[:category][:id])
+                end    
     @category.attributes = params[:category]
     
+    render 'new'
 =begin    
     if request.post?
       respond_to do |format|
@@ -68,8 +126,6 @@ class Admin::CategoriesController < Admin::BaseController
       return
     end
 =end
-
-    render 'new'
   end
 
   def save_category
