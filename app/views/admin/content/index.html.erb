@@ -1,4 +1,4 @@
-<% @page_heading = _('Fuck you, too! Manage articles') + content_tag(:div, link_to(_("New Article"), {:controller => 'content', :action => 'new'}, :id => 'dialog-link', :class => 'btn info'), :class => 'pull-right') %>
+<% @page_heading = _('Manage articles') + content_tag(:div, link_to(_("New Article"), {:controller => 'content', :action => 'new'}, :id => 'dialog-link', :class => 'btn info'), :class => 'pull-right') %>
 
 <%= form_remote_tag  :url      => {:action => 'index'},
   :method   => :get,
