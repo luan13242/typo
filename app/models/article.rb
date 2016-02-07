@@ -91,10 +91,16 @@ class Article < Content
       self.body = s
       
       # merge comments together
-      comments = self.comments + other.comments
-      self.comments = comments
+      comment_set = []
+      other.comments.all.each do |comment|
+        comment.repoint_article(self.id)
+        comment_set << comment
+      end
+      comment_set = comment_set + self.comments
+      self.comments = comment_set
       
       if self.save
+        other.destroy
         return self
       else
         raise self.errors.full_messages

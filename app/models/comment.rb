@@ -10,6 +10,10 @@ class Comment < Feedback
   attr_accessor :user_agent
   attr_accessor :referrer
   attr_accessor :permalink
+  
+  def repoint_article(new_article_id)
+    self.article_id = new_article_id
+  end
 
   def notify_user_via_email(user)
     if user.notify_via_email?
