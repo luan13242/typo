@@ -466,4 +466,29 @@ class Article < Content
     to = to - 1 # pull off 1 second so we don't overlap onto the next day
     return from..to
   end
+  
+  def merge(other_id)
+    
+    # update self.body with self.body + other.body
+    other = Article.find_by_id(other_id)
+    if other.nil?
+      raise "Invalid article ID #{other_id}"
+    else
+      # merge other body to self body, self.body << other.body won't work
+      s = self.body + other.body
+      self.body = s
+      
+      # merge comments together
+      comments = self.comments + other.comments
+      self.comments = comments
+      
+      if self.save
+        return self
+      else
+        raise self.errors.full_messages
+      end
+    end    
+    
+  end
+  
 end

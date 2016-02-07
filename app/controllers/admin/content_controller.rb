@@ -11,6 +11,28 @@ class Admin::ContentController < Admin::BaseController
     render :inline => "<%= raw auto_complete_result @items, 'name' %>"
   end
 
+  # Lu: this is an action I added.  Not sure if this is the way...
+  def merge
+    other_article_id = params[:merge_with]
+    my_id = params[:my_id]
+    
+    if my_id != other_article_id
+      this_article = Article.find_by_id(my_id)
+     
+      begin
+        @article = this_article.merge(other_article_id)
+        flash[:notice] = "Merge success"
+      rescue Exception => e
+        flash[:error] = e.message
+      end
+    
+    else
+      flash[:error] = "Can't merge same article: #{params[:my_id]} and #{other_article_id}"
+    end
+    
+    redirect_to '/admin/content'
+  end
+  
   def index
     @search = params[:search] ? params[:search] : {}
     
@@ -140,10 +162,19 @@ class Admin::ContentController < Admin::BaseController
   def real_action_for(action); { 'add' => :<<, 'remove' => :delete}[action]; end
 
   def new_or_edit
+    # set the @article variable.  if completely new, :id is null, otherwise, it is editing
+    # hidden variables are set by get_or_build_article method in the article model
     id = params[:id]
     id = params[:article][:id] if params[:article] && params[:article][:id]
     @article = Article.get_or_build_article(id)
     @article.text_filter = current_user.text_filter if current_user.simple_editor?
+    
+    # Lu: If :article is not set, then it is a new article
+    if id.nil?
+      is_new = TRUE
+    else
+      is_new = FALSE
+    end
 
     @post_types = PostType.find(:all)
     if request.post?
@@ -162,6 +193,7 @@ class Admin::ContentController < Admin::BaseController
         
     @article.published_at = DateTime.strptime(params[:article][:published_at], "%B %e, %Y %I:%M %p GMT%z").utc rescue Time.parse(params[:article][:published_at]).utc rescue nil
 
+    # if the program flow gets here from edit, then request.post will be true
     if request.post?
       set_article_author
       save_attachments
@@ -175,12 +207,22 @@ class Admin::ContentController < Admin::BaseController
         redirect_to :action => 'index'
         return
       end
-    end
-
+    end #end of the update record code
+  
     @images = Resource.images_by_created_at.page(params[:page]).per(10)
     @resources = Resource.without_images_by_filename
     @macros = TextFilter.macro_filters
-    render 'new'
+    
+    # if the current_user has a profile_id of 1, it is an admin
+    # if the current_user is an admin, he/she can merge articles
+    # Lu: the merge option should not be presented to NEW article
+    @user = current_user
+    #flash[:notice] = "#{current_user.name} new article status #{is_new}" 
+    if @user.profile_id == 1 && is_new == FALSE
+      render 'admin_new' 
+    else
+      render :new
+    end
   end
 
   def set_the_flash
