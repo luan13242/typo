@@ -35,15 +35,17 @@ if this is an edit/udpate.  If edit/update, save and redirect to new.
     if request.post?
       # save new or modified category
 
-      if Category.exists?(:name => params[:category][:name])
-        @category = Category.find_by_name(params[:category][:name])
-        if @category.update_attributes(:keywords => params[:category][:keywords], :permalink => params[:category][:permalink], :description => params[:category][:description])
+      @category = Category.find_by_id(params[:id])  #if id is set, then a record will be found, else nil
+      if @category
+        # name is the business key, updating business key has implication.  i guess
+        # to the class, it is "to hell with it"
+        if @category.update_attributes(:name => params[:category][:name], :keywords => params[:category][:keywords], :permalink => params[:category][:permalink], :description => params[:category][:description])
           flash[:notice] = "Category was successfully updated."
         else
           flash[:error] = @category.errors.full_messages
         end
       else
-        @category = Category.new(params[:category])        
+        @category = Category.new(params[:category])         #abandon the previous memory, ha!
         if @category.save
           flash[:notice] = "Category was successfully saved."
         else
